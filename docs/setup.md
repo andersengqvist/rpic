@@ -1,3 +1,7 @@
+# Conventions
+All file and directory paths are from the root of the project.
+So the file `hello.txt` is located in the root directory, not in the `docs/` directory that this document is located in.
+
 # Hardware
 The heart of the cluster is the four Raspberry Pi 4 Model B.
 Went with the larger memory configuration just because.
@@ -51,8 +55,9 @@ Now eject the SD card and do this 4 times for each RPi.
 # Running for first time
 Start the RPi and try to ssh to it.
 Default username is **pi**, password **raspberry**.
-This will be changed.
+Change the password.
 
+# Change hostname
 Change to a static ip address for each node.
 This will make it easier to ssh to the different nodes, and to run Ansible.
 See router documentation on how to do that.
@@ -92,11 +97,38 @@ Finally, reboot:
 
 Might add this as Ansible tasks as well. 
 
+# Setup ssh keys
+Ssh keys make it possible to ssh to a cluster node without having to provide password.
+Ssh keys will also make it easier with Ansible.
+Generate the keys with this command:
+
+`ssh-keygen -t rsa -b 2048 -f ~/.ssh/rpic_key`
+
+Then copy the public key to eash host with this command:
+
+`ssh-copy-id -i ~/.ssh/rpic_key pi@HOST`
+
+Test:
+
+`ssh -i ~/.ssh/rpic_key pi@HOST`
+
 # Shutting down the cluster
 
 ssh to each node and run:
 
 `sudo shutdown -h now`
 
-Doing this every time might be annoying, so better is either to create a script, do it with Ansible or create a physical shut dow button.
-Or a combination of the above
+Or, run this script to shut down all nodes:
+
+`./shutdown_rpic.sh`
+
+Maybe investigate creating a physical shut dow button.
+Looks like it is possible to both shut down and wake up using the gpios.
+
+# Commands
+
+## Reboot
+`sudo reboot`
+
+## Shut down
+`sudo shutdown -h now`

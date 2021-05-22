@@ -1,0 +1,6 @@
+# Run:
+# ansible-playbook setup.yml
+---
+- hosts: rpic_all
+  roles:
+    - setup

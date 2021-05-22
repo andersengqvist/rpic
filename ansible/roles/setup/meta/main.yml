@@ -1,0 +1,4 @@
+# roles/setup/meta/main.yml
+---
+dependencies:
+  - role: sys

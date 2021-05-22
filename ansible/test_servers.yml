@@ -1,0 +1,9 @@
+# Run:
+# ansible-playbook test_servers.yml
+- hosts: rpic_all
+
+  tasks:
+  - name: Say hello
+    debug:
+      msg: Hello rpi
+
