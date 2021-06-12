@@ -7,4 +7,12 @@
 ff02::1		ip6-allnodes
 ff02::2		ip6-allrouters
 
+# Localhost
 127.0.1.1		{{ inventory_hostname }}
+
+# All other hosts in the cluster
+{% for host in ansible_play_hosts %}
+{% if host != inventory_hostname %}
+{{ hostvars[host].ethernet_host }}		{{ host }}
+{% endif %}
+{% endfor %}

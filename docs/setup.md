@@ -132,3 +132,15 @@ Looks like it is possible to both shut down and wake up using the gpios.
 
 ## Shut down
 `sudo shutdown -h now`
+
+# Links
+Inspirational links:
+
+https://hackernoon.com/building-cheap-raspberry-pi-cluster-from-scratch-uf1f3u7z
+The github repo https://github.com/ikaruswill/cluster-ansible-roles
+
+https://magpi.raspberrypi.org/articles/build-a-raspberry-pi-cluster-computer
+
+https://dev.to/shandesai/provision-your-raspberry-pi-4-cluster-with-ansible-2j8m
+
+https://github.com/aapit/ansible-k3s-rpi

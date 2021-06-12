@@ -1,0 +1,9 @@
+
+---
+
+ssh_keygen_algorithm: 'rsa'
+ssh_keygen_bits: '2048'
+ssh_keygen_password: ''
+
+ssh_hash_known_hosts: "no"
+ssh_host_key_algorithm: 'rsa'

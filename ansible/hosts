@@ -1,9 +1,9 @@
 # All rpic nodes
 [rpic_all]
-rpic01 ansible_host=192.168.1.21
-rpic02 ansible_host=192.168.1.22
-rpic03 ansible_host=192.168.1.23
-rpic04 ansible_host=192.168.1.24
+rpic01 ansible_host=192.168.1.21 ethernet_host=10.0.0.21
+rpic02 ansible_host=192.168.1.22 ethernet_host=10.0.0.22
+rpic03 ansible_host=192.168.1.23 ethernet_host=10.0.0.23
+rpic04 ansible_host=192.168.1.24 ethernet_host=10.0.0.24
 
 [rpic_all:vars]
 ansible_user=pi

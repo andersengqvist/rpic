@@ -1,22 +1,11 @@
 # roles/setup/tasks/main.yml
 ---
 
-# Updates the /etc/hostname file
-- name: Set hostname
-  become: yes
-  hostname:
-    name: "{{ inventory_hostname }}"
-  notify: restart_node
+- name: Setup network
+  include_tasks: network.yml
 
-# Updaes /etc/hosts file with the template found in ../templates/etc/hosts.j2
-- name: Update '/etc/hosts'
-  become: yes
-  template:
-    src: etc/hosts.j2
-    dest: /etc/hosts
-  notify: restart_node
+- name: Setup ssh between nodes
+  include_tasks: ssh.yml
 
-# If the hostname has been changed, run the handlers at this point
-- name: Flush handlers for hostname updates
-  meta: flush_handlers
-  
+- name: Disable bluetooth
+  include_tasks: bluetooth.yml

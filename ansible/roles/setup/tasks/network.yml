@@ -1,0 +1,36 @@
+# roles/setup/tasks/network.yml
+---
+
+#
+# Update hostname and enable ethernet
+#
+
+# Updates the /etc/hostname file
+- name: Update '/etc/hostname'
+  become: yes
+  hostname:
+    name: "{{ inventory_hostname }}"
+  notify: restart_node
+
+# Set hostname to local host
+# Set hostname to all other nodes in cluster
+# Updates /etc/hosts file with the template found in ../templates/etc/hosts.j2
+- name: Update '/etc/hosts'
+  become: yes
+  template:
+    src: etc/hosts.j2
+    dest: /etc/hosts
+  notify: restart_node
+
+# Set a static ethernet IP address
+# Updates /etc/hosts file with the template found in ../templates/etc/dhcpcd.conf.j2
+- name: Update '/etc/dhcpcd.conf'
+  become: yes
+  template:
+    src: etc/dhcpcd.conf.j2
+    dest: /etc/dhcpcd.conf
+  notify: restart_node
+
+# If something with the network has been changed, run the handlers at this point
+- name: Flush handlers for network updates
+  meta: flush_handlers

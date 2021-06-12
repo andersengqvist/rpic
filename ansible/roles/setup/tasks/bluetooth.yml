@@ -1,0 +1,32 @@
+# roles/setup/tasks/bluetooth.yml
+---
+
+- name: Disable Bluetooth on startup (legacy version)
+  become: yes
+  lineinfile:
+    line: dtoverlay=pi3-disable-bt          # Make sure this line exist
+    path: /boot/config.txt                  # in this file
+  notify: restart_node
+
+- name: Disable Bluetooth on startup
+  become: yes
+  lineinfile:
+    line: dtoverlay=disable-bt              # Make sure this line exist
+    path: /boot/config.txt                  # in this file
+  notify: restart_node
+
+- name: Disable hciuart service
+  become: yes
+  systemd:
+    name: hciuart
+    enabled: no                             # Do not start on boot 
+    state: stopped                          # Make sure service is stopped
+  notify: restart_node
+
+- name: Disable Bluetooth service
+  become: yes
+  systemd:
+    name: bluetooth
+    enabled: no                             # Do not start on boot 
+    state: stopped                          # Make sure service is stopped
+  notify: restart_node

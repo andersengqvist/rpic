@@ -1,0 +1,57 @@
+# roles/setup/tasks/ssh.yml
+---
+
+#
+# Enable passwordless ssh between nodes
+#
+# Taken from https://github.com/ikaruswill/cluster-ansible-roles/tree/master/ssh
+#
+
+- name: Check if ssh key exists
+  stat:
+    path: '/home/{{ ansible_user }}/.ssh/id_{{ ssh_keygen_algorithm }}'
+  register: ssh_key_stat
+
+- name: Create .ssh directory
+  file:
+    path: '/home/{{ ansible_user }}/.ssh/'
+    state: directory
+
+- name: Generate ssh key
+  command: 'ssh-keygen -t "{{ ssh_keygen_algorithm }}" -b "{{ ssh_keygen_bits }}" -N "{{ ssh_keygen_password }}" -f /home/{{ ansible_user }}/.ssh/id_{{ ssh_keygen_algorithm }}'
+  when: ssh_key_stat.stat.exists == False
+
+- name: Slurp public keys from all nodes
+  slurp:
+    src: '/home/{{ ansible_user }}/.ssh/id_{{ ssh_keygen_algorithm }}.pub'
+  register: ssh_key_slurp
+
+- name: Copy public keys of all nodes into authorized_keys
+  authorized_key:
+    user: '{{ ansible_user }}'
+    state: present
+    key: '{{ hostvars[item].ssh_key_slurp.content | b64decode }}'
+  with_items: '{{ ansible_play_hosts }}'
+
+- name: Slurp host keys from all nodes
+  slurp:
+    src: '/etc/ssh/ssh_host_{{ ssh_host_key_algorithm }}_key.pub'
+  register: ssh_host_key_slurp
+
+# Add all nodes to known hosts
+#
+# If this is not done then you will get this question the first time you try to ssh:
+# The authenticity of host 'X' can't be established.
+# ECDSA key fingerprint is SHA256:YZ.
+# Are you sure you want to continue connecting (yes/no)? 
+#
+# This setup will make it possible to ssh using both IP address and hostname without getting the question above
+- name: Insert all nodes into global known_hosts
+  become: yes
+  known_hosts:
+    name: '{{ item }}'
+    key: '{{ item }},{{ hostvars[item].ethernet_host }} {{ hostvars[item].ssh_host_key_slurp.content | b64decode }}'
+    path: '/etc/ssh/ssh_known_hosts'
+    hash_host: '{{ ssh_hash_known_hosts }}'
+    state: present
+  with_items: '{{ ansible_play_hosts }}'
