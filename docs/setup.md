@@ -1,6 +1,6 @@
 # Conventions
 All file and directory paths are from the root of the project.
-So the file `hello.txt` is located in the root directory, not in the `docs/` directory that this document is located in.
+So the file `hello.txt` is located in the root directory, not in the `docs/` where this document is located.
 
 # Hardware
 The heart of the cluster is the four Raspberry Pi 4 Model B.
@@ -60,6 +60,7 @@ Change the password.
 # Change hostname
 Change to a static ip address for each node.
 This will make it easier to ssh to the different nodes, and to run Ansible.
+Log in to the router and assign a static ip to each rpi.
 See router documentation on how to do that.
 
 Change the hostname of each RPi.
@@ -95,7 +96,16 @@ Finally, reboot:
 
 `sudo reboot`
 
-Might add this as Ansible tasks as well. 
+Might add this as Ansible tasks as well.
+
+This is the table of the host names and static ip addresses:
+
+| Hostname | IP           |
+| -------- |------------- |
+| rpic01   | 192.168.1.21 |
+| rpic02   | 192.168.1.22 |
+| rpic03   | 192.168.1.23 |
+| rpic04   | 192.168.1.24 |
 
 # Setup ssh keys
 Ssh keys make it possible to ssh to a cluster node without having to provide password.
@@ -104,7 +114,7 @@ Generate the keys with this command:
 
 `ssh-keygen -t rsa -b 2048 -f ~/.ssh/rpic_key`
 
-Then copy the public key to eash host with this command:
+Then copy the public key to each host with this command:
 
 `ssh-copy-id -i ~/.ssh/rpic_key pi@HOST`
 
